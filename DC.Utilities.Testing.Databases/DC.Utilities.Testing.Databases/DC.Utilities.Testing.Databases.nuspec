@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>DC.Utilities.Testing.Databases</id>
+    <version>1.0.1</version>
+    <title>DC.Utilities.Testing.Databases</title>
+    <authors>ESFA</authors>
+    <owners>ESFA</owners>
+    <licenseUrl>https://github.com/SkillsFundingAgency/DC-Shared-Packages/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/SkillsFundingAgency/DC-Shared-Packages</projectUrl>
+    <iconUrl>https://avatars3.githubusercontent.com/u/9841374?s=200</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Utility classes to help the testing of DC for database management</description>
+    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
+    <copyright>Copyright 2018</copyright>
+    <tags>DC</tags>
+  </metadata>
+  <files>
+    <file src="bin\Debug\*.dll" target="bin" />
+    <file src="bin\Debug\*.config" target="bin" />
+  </files>
+</package>
