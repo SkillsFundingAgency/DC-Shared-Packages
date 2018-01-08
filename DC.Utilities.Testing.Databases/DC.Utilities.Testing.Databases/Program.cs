@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace DC.Utilities.SQLDb
 {
+    /// <summary>
+    /// Excecutable should be move in a new proj to allow other c# project use the assembly
+    /// </summary>
     static class Program
     {
 
@@ -23,16 +26,23 @@ namespace DC.Utilities.SQLDb
 
                 var result = Parser.Default.ParseArguments(args, options, OnVerbCommand);
                 if (!result)
-                    Console.Write(options.GetUsage());
+                {
+                    WriteUsagesAndThrowError(options);
+                   
+                }
 
             }
             else {
-                Console.Write(options.GetUsage());
+                WriteUsagesAndThrowError(options);
             }
            
         }
 
-
+        private static void WriteUsagesAndThrowError(Options options)
+        {
+            Console.Write(options.GetUsage());
+            throw new InvalidOperationException("Please see Usages of the tool and pass the appropriate parameters");
+        }
 
         private static void OnVerbCommand(string verbArgument, object verbOptions)
         {
@@ -80,40 +90,5 @@ namespace DC.Utilities.SQLDb
     }
 
 
-
-
-
-
-    /*
-     pre-release
-      var parser = new Parser();
-                var result = parser.ParseArguments(args, typeof(RestoreDbOptions), typeof(RemoveDbOptions), typeof(Options));
-                if (result is NotParsed<object>) {
-                    System.Diagnostics.Debug.Write(((NotParsed<object>)result).Errors.ToErrorString());
-                    return;
-                }
-
-                var parsed = ((Parsed<object>)result).Value;
-                if(parsed is RestoreDbOptions)
-                { Console.Write("Restored"); }
-               // var result = Parser.Default.ParseArguments<RestoreDbOptions, RemoveDbOptions, Options>(args);
-                if (result == null)
-                {
-                    Console.Write(options.GetUsage());
-                }
-                
-     
-     */
-    //public static class Ex
-    //{
-    //    public static string ToErrorString(this IEnumerable<CommandLine.Error> errors)
-    //    {
-    //        StringBuilder sb = new StringBuilder();
-    //        errors.ToList().ForEach(err => {
-    //            sb.Append(err.ToString());
-    //                 }
-    //                 );
-    //        return sb.ToString();
-    //    }
-    //}
+    
 }
