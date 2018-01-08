@@ -36,9 +36,6 @@ namespace DC.Utilities.SQLDb.CommandOptions
         [Option("dbname", Required = true, HelpText = "Name of database to be removed")]
         public string DatabaseName { get; set; }
 
-        [Option("backupfile", Required = true, HelpText = "Name of the backup file with path on the disk")]
-        public string BackupFile { get; set; }
-
         [Option("IsDedsDB", Required = false, HelpText = "Optional flag to indicate whether DB to be restored and published in deds")]
         public bool IsDedsDb { get; set; }
 
