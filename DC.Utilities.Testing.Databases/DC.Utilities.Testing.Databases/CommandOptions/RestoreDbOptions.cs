@@ -33,19 +33,23 @@ namespace DC.Utilities.SQLDb.CommandOptions
         internal  const string Verb = "removedb";
         public RemoveDbOptions() { }
 
+        private bool verbose = false;
+
         [Option("dbname", Required = true, HelpText = "Name of database to be removed")]
         public string DatabaseName { get; set; }
 
         [Option("IsDedsDB", Required = false, HelpText = "Optional flag to indicate whether DB to be restored and published in deds")]
         public bool IsDedsDb { get; set; }
 
+        [Option("verbose", HelpText = "Logs the verbose messages for the debug purpose")]
+        public bool Verbose { get { return verbose; } set { verbose = value; Config.CommonConfig.Verbose = value; } }
     }
 
 
     public class Options
     {
 
-        private bool verbose = false;
+        
 
         [VerbOption(RestoreDbOptions.Verb, HelpText = "Restore a DB to deds databases")]
         public RestoreDbOptions RestoreDb { get; set; }
@@ -53,8 +57,7 @@ namespace DC.Utilities.SQLDb.CommandOptions
         [VerbOption(RemoveDbOptions.Verb, HelpText = "Remove a DB to deds databases")]
         public RemoveDbOptions RemoveDb { get; set; }
 
-        [Option("verbose", HelpText="Logs the verbose messages for the debug purpose")]
-       public bool Verbose { get { return verbose; } set { verbose = value; Config.CommonConfig.Verbose = value;  } }
+       
         
         public string GetUsage()
         {
