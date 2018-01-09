@@ -209,21 +209,21 @@ namespace DC.Utilities.SQLDb.Helpers
         {
             var sql = string.Format("SELECT * from sys.databases WHERE name LIKE '{0}_%' AND source_database_id IS NOT NULL", databaseName);
             var snapshots = new List<string>();
-            var reader = GetDataReader(CommonConfig.DedsConnectionString, sql, null);
-            while (reader.Read())
+            var reader = GetDataRows(CommonConfig.DedsConnectionString, sql, new ConsoleLogger());
+            foreach(DataRow dr in reader)
             {
-                var db = reader.GetValue(0).ToString();
+                var db = dr[0].ToString();
                 snapshots.Add(db);
             }
             return snapshots;
         }
 
-        public static SqlDataReader GetDataReader(string connectionString, string sql, ILogger _logger)
+        public static DataRowCollection GetDataRows(string connectionString, string sql, ILogger _logger)
         {
             if(CommonConfig.Verbose)
             _logger.Message("executing the query " + sql);
-
-            using(var conn = new SqlConnection(CommonConfig.MasterConnectionString))
+            SqlDataReader reader = null;
+            using(var conn = new SqlConnection(connectionString))
             {
                 using (var cmd = new SqlCommand(sql, conn))
                 {
@@ -232,11 +232,14 @@ namespace DC.Utilities.SQLDb.Helpers
                         conn.Open();
                     }
 
+                    DataSet ds = new DataSet();
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(ds);
+                    if (ds.Tables.Count > 0)
+                        return ds.Tables[0].Rows;
+                    else
+                        return null;
                    
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        return reader;
-                    }
 
                 }
             }

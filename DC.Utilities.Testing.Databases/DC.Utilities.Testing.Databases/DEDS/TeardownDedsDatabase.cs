@@ -2,6 +2,7 @@
 using DC.Utilities.SQLDb.Helpers;
 using DC.Utilities.SQLDb.Config;
 using System.Collections.Generic;
+using System.Data;
 
 namespace ILR_Support_Tool.DEDS
 {
@@ -53,13 +54,14 @@ namespace ILR_Support_Tool.DEDS
             string getDatasetIds = string.Format("Select id from dataset where code = '{0}'", databaseName);
             
             List<string> dbs = new List<string>();
-            var reader = SqlHelper.GetDataReader(CommonConfig.DedsConnectionString, getDatasetIds, _logger);
-            while (reader.Read())
+            var reader = SqlHelper.GetDataRows(CommonConfig.DedsConnectionString, getDatasetIds, _logger);
+
+            foreach (DataRow dr in reader)
             {
-                var db = reader.GetValue(0).ToString();
+                var db = dr[0].ToString();
                 dbs.Add(db);
-              
             }
+
             //remove all the records in the dataset tables
             dbs.ForEach(db =>
             {
