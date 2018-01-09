@@ -26,9 +26,11 @@ namespace ILR_Support_Tool.DEDS
 
                 _logger.Message(databaseName + " Teardown Complete" );
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 _logger.Message(databaseName + " Teardown Failed");
+                if (CommonConfig.Verbose)
+                    _logger.Message(ex.StackTrace);
             }
         }
 
