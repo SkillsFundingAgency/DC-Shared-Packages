@@ -42,15 +42,19 @@ namespace DC.Utilities.SQLDb.CommandOptions
     }
 
 
-    class Options
+    public class Options
     {
+
+        private bool verbose = false;
+
         [VerbOption(RestoreDbOptions.Verb, HelpText = "Restore a DB to deds databases")]
         public RestoreDbOptions RestoreDb { get; set; }
 
         [VerbOption(RemoveDbOptions.Verb, HelpText = "Remove a DB to deds databases")]
         public RemoveDbOptions RemoveDb { get; set; }
 
-       
+        [Option("verbose", HelpText="Logs the verbose messages for the debug purpose")]
+       public bool Verbose { get { return verbose; } set { verbose = value; Config.CommonConfig.Verbose = value;  } }
         
         public string GetUsage()
         {

@@ -34,6 +34,8 @@ namespace DC.Utilities.SQLDb.Config
             _dedsPublishUserName = ConfigurationManager.AppSettings["DedsPublishUserName"];
         }
 
+        public static bool Verbose { get; internal set; }
+
         public static string  DpsConnectionString {
             get {
                 if (string.IsNullOrEmpty(_dpsConnectionString)) throw new NotImplementedException("DPS Connection string not provided, check the configuration files");

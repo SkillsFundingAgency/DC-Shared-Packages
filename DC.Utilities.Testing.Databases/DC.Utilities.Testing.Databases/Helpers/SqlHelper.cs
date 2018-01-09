@@ -209,7 +209,21 @@ namespace DC.Utilities.SQLDb.Helpers
         {
             var sql = string.Format("SELECT * from sys.databases WHERE name LIKE '{0}_%' AND source_database_id IS NOT NULL", databaseName);
             var snapshots = new List<string>();
-            using (var conn = new SqlConnection(CommonConfig.MasterConnectionString))
+            var reader = GetDataReader(CommonConfig.DedsConnectionString, sql, null);
+            while (reader.Read())
+            {
+                var db = reader.GetValue(0).ToString();
+                snapshots.Add(db);
+            }
+            return snapshots;
+        }
+
+        public static SqlDataReader GetDataReader(string connectionString, string sql, ILogger _logger)
+        {
+            if(CommonConfig.Verbose)
+            _logger.Message("executing the query " + sql);
+
+            using(var conn = new SqlConnection(CommonConfig.MasterConnectionString))
             {
                 using (var cmd = new SqlCommand(sql, conn))
                 {
@@ -218,19 +232,35 @@ namespace DC.Utilities.SQLDb.Helpers
                         conn.Open();
                     }
 
+                   
                     using (var reader = cmd.ExecuteReader())
                     {
-                        while (reader.Read())
-                        {
-                            var db = reader.GetValue(0).ToString();
-                            snapshots.Add(db);
-                        }
+                        return reader;
                     }
 
                 }
             }
-
-            return snapshots;
         }
+
+        public static int ExecuteNonReader(string connectionString, string sql, ILogger _logger)
+        {
+            if (CommonConfig.Verbose)
+                _logger.Message("executing the query " + sql);
+
+            using (var conn = new SqlConnection(CommonConfig.MasterConnectionString))
+            {
+                using (var cmd = conn.CreateCommand())
+                {
+                    if (conn.State != ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+                    cmd.CommandText = sql;
+                    return cmd.ExecuteNonQuery();
+
+                }
+            }
+        }
+
     }
 }
