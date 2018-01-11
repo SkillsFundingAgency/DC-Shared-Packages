@@ -71,6 +71,12 @@ namespace DC.Utilities.SQLDb
             if(dbOptions.IsDedsDb) //this is a db needs to be restored in deds and publishing is needed
             {
                 RestoreDedsDatabase db = new RestoreDedsDatabase(new ConsoleLogger());
+
+                if(dbOptions.SkipIfExists && db.DatasetExists(dbOptions.DatabaseName, new ConsoleLogger()))
+                {
+                        return;
+                }
+
                 db.Run(dbOptions.DatabaseName, dbOptions.BackupFile);
             }
             
@@ -88,7 +94,6 @@ namespace DC.Utilities.SQLDb
         }
 
     }
-
 
     
 }

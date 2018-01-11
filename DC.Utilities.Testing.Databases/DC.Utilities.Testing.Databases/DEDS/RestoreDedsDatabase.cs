@@ -2,6 +2,9 @@
 using Amor.DCFT.DES.Domain.Entities.DataContracts;
 using DC.Utilities.SQLDb.Helpers;
 using DC.Utilities.SQLDb.Config;
+using System.Collections.Generic;
+using System.Linq;
+using System.Data;
 
 namespace ILR_Support_Tool.DEDS
 {
@@ -75,6 +78,23 @@ namespace ILR_Support_Tool.DEDS
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
             }
+        }
+
+        public bool DatasetExists(string datasetName, ILogger _logger)
+        {
+
+            string getDatasetIds = string.Format("Select id from dataset where code = '{0}'", datasetName);
+
+            List<string> dbs = new List<string>();
+            var reader = SqlHelper.GetDataRows(CommonConfig.DedsConnectionString, getDatasetIds, _logger);
+
+            foreach (DataRow dr in reader)
+            {
+                var db = dr[0].ToString();
+                dbs.Add(db);
+            }
+            return dbs.Any();
+            
         }
     }
 }

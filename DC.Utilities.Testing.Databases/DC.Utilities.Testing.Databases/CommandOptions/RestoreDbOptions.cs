@@ -26,6 +26,9 @@ namespace DC.Utilities.SQLDb.CommandOptions
         [Option("IsDedsDB", Required = false, HelpText = "Optional flag to indicate whether DB to be restored and published in deds")]
         public bool IsDedsDb { get; set; }
 
+        [Option("SkipIfExists", Required = false, HelpText = "Optional flag to allow skiping the restore if database already exists")]
+        public bool SkipIfExists { get; set; }
+
     }
    
     public class RemoveDbOptions
@@ -40,6 +43,8 @@ namespace DC.Utilities.SQLDb.CommandOptions
 
         [Option("IsDedsDB", Required = false, HelpText = "Optional flag to indicate whether DB to be restored and published in deds")]
         public bool IsDedsDb { get; set; }
+
+       
 
         [Option("verbose", HelpText = "Logs the verbose messages for the debug purpose")]
         public bool Verbose { get { return verbose; } set { verbose = value; Config.CommonConfig.Verbose = value; } }
