@@ -24,11 +24,11 @@ namespace ILR_Support_Tool.DEDS
             {
                 _logger.Message("Restoring " + databaseName + ".");
                 string connectionString = CommonConfig.DedsConnectionString.Replace(CommonConfig.DedsDatabaseName, databaseName);
-                 
 
+                writeVerboseMessage($"Database {databaseName} is being restored");
                 //restore database
                 SqlHelper.RestoreDatabase(databaseName, bakFile);
-
+                writeVerboseMessage($"Database {databaseName} has been restored");
                 //execute test data scripts
                 if (!string.IsNullOrEmpty(testData))
                 {
@@ -39,7 +39,7 @@ namespace ILR_Support_Tool.DEDS
 
                 //add data set entry to Deds database (dcftdes)
                 string sql = string.Format("SET IDENTITY_INSERT DataSet ON; " +
-                                           "INSERT INTO DataSet (Id, Code, Name, Description, CollectionId, DataProviderId, RetentionDuration, SequenceNumber) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}',{6},{7}); " +
+                                           "INSERT INTO DataSet (Id, Code, Name, Description, CollectionId, DataProviderId, RetentionDuration, SequenceNumber, TrackChanges, GenerateBulkDataFiles, MaxNumberOfSnapshots) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}',{6},{7},{8},{8},{8}); " +
                                            "SET IDENTITY_INSERT DataSet OFF;",
                                            dataSetId.ToString(),
                                            databaseName, databaseName,
@@ -47,13 +47,18 @@ namespace ILR_Support_Tool.DEDS
                                            Guid.NewGuid().ToString(),
                                            Guid.NewGuid().ToString(),
                                            316527660000000,
-                                           1134);
+                                           1134,
+                                           0
+                                           );
 
+                writeVerboseMessage($"SQL: {Environment.NewLine} {sql}  {Environment.NewLine}is being executed on deds");
 
                 SqlHelper.ExecuteSql(CommonConfig.DedsConnectionString, sql);
 
                 //map DedsPublishUser to database
                 SqlHelper.ExecuteSql(connectionString, @"ALTER AUTHORIZATION ON DATABASE::[" + databaseName + @"] TO [" + CommonConfig.DedsPublishUser+ "]");
+                writeVerboseMessage($"Publishing the dataset: {dataSetId}");
+
 
                 using (var client = new DedsPublishServiceClient())
                 {
@@ -95,6 +100,13 @@ namespace ILR_Support_Tool.DEDS
             }
             return dbs.Any();
             
+        }
+
+
+        private void writeVerboseMessage(string message)
+        {
+            if (CommonConfig.Verbose)
+                _logger.Message(message);
         }
     }
 }

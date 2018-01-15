@@ -14,6 +14,7 @@ namespace DC.Utilities.SQLDb.CommandOptions
     public class RestoreDbOptions
     {
         internal  const string Verb = "restoredb";
+        private bool verbose = false;
 
         public RestoreDbOptions() { }
 
@@ -28,6 +29,9 @@ namespace DC.Utilities.SQLDb.CommandOptions
 
         [Option("SkipIfExists", Required = false, HelpText = "Optional flag to allow skiping the restore if database already exists")]
         public bool SkipIfExists { get; set; }
+
+        [Option("verbose", HelpText = "Logs the verbose messages for the debug purpose")]
+        public bool Verbose { get { return verbose; } set { verbose = value; Config.CommonConfig.Verbose = value; } }
 
     }
    
